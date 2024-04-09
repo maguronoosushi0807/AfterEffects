@@ -1,3 +1,4 @@
+#include<cstdlib>
 #include<fstream>
 #include<iostream>
 #include<regex>
@@ -197,6 +198,7 @@ int main() {
 	std::cout << script;
 
 	std::cout << std::endl << std::endl << "----------------" << std::endl << std::endl << std::endl;
+	std::system("pause");
 	return 0;
 }
 
