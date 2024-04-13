@@ -1,3 +1,4 @@
+#include<cstdlib>
 #include<fstream>
 #include<iostream>
 #include<string>
@@ -101,8 +102,9 @@ std::string upper[26][2]{
 */
 
 
+
 int main() {
-	std::ifstream file("ExpressionPaster.jsxbin");
+	std::ifstream file("jsx/ExpressionPaster.jsxbin");
 	std::string line;
 
 	if (!file) {
@@ -176,8 +178,9 @@ int main() {
 		}
 	}
 
-
 	std::cout << std::endl << std::endl << "----------------" << std::endl << std::endl << std::endl;
+
+	std::system("pause");
 	return 0;
 }
 
