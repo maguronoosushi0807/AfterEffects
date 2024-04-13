@@ -1,5 +1,7 @@
 #include<iostream>
 
+#include<Windows.h>
+
 namespace {
 	constexpr int TYPE = 2;
 	constexpr int CHARACTER_NUM = 26;
@@ -64,6 +66,8 @@ std::string dictionary[TYPE][CHARACTER_NUM][2]{
 	}
 };
 
+BOOL setClipboardText(std::string str);
+
 int main() {
 	std::string script = "";
 	std::string binary = "";
@@ -88,9 +92,41 @@ int main() {
 			}
 		}
 
+		setClipboardText(binary);
 
 		std::cout << binary << std::endl << std::endl;
 	}
 
 	return 0;
 }
+
+BOOL setClipboardText(std::string str) {
+	SIZE_T buf_size;
+	std::string* buf;
+	HANDLE h_mem;
+
+	buf_size = str.length() + 1;
+	h_mem = GlobalAlloc(GMEM_SHARE | GMEM_MOVEABLE, buf_size);
+	if (!h_mem) {
+		std::cout << "Ž¸”s" << std::endl;
+		return FALSE;
+	}
+
+	buf = reinterpret_cast<std::string*>(GlobalLock(h_mem));
+	if (buf) {
+		buf = &str;
+		GlobalUnlock(h_mem);
+		if (OpenClipboard(NULL)) {
+			//EmptyClipboard();
+			SetClipboardData(CF_TEXT, h_mem);
+			CloseClipboard();
+
+			std::cout << "¬Œ÷" << std::endl;
+			return TRUE;
+		}
+	}
+
+	std::cout << "Ž¸”s" << std::endl;
+	return FALSE;
+
+};
