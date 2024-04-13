@@ -1,14 +1,15 @@
 #include<cstdlib>
 #include<fstream>
 #include<iostream>
+#include<regex>
 #include<string>
 
-namespace Constants {
-	constexpr unsigned int TYPE = 3;
-	constexpr unsigned int CHARACTER_NUM=26;
+namespace {
+	constexpr unsigned int CHARACTER_TYPE = 2;
+	constexpr unsigned int CHARACTER_NUM = 26;
 }
 
-std::string character[Constants::TYPE][Constants::CHARACTER_NUM][2]{
+std::string character[CHARACTER_TYPE][CHARACTER_NUM][2]{
 	{
 		{"jB","a"},
 		{"jC","b"},
@@ -64,156 +65,151 @@ std::string character[Constants::TYPE][Constants::CHARACTER_NUM][2]{
 		{"iY","X"},
 		{"iZ","Y"},
 		{"ia","Z"}
-	},
-	{
-
 	}
 };
 
 /*
-std::string upper[26][2]{
-	{"iB","A"},
-	{"iC","B"},
-	{"iD","C"},
-	{"iE","D"},
-	{"iF","E"},
-	{"iG","F"},
-	{"iH","G"},
-	{"iI","H"},
-	{"iJ","I"},
-	{"iK","J"},
-	{"iL","K"},
-	{"iM","L"},
-	{"iN","M"},
-	{"iO","N"},
-	{"iP","O"},
-	{"iQ","P"},
-	{"iR","Q"},
-	{"iS","R"},
-	{"iT","S"},
-	{"iU","T"},
-	{"iV","U"},
-	{"iW","V"},
-	{"iX","W"},
-	{"iY","X"},
-	{"iZ","Y"},
-	{"iz","Z"},
-};
+
+ ï¿½Sï¿½ï¿½ï¿½æ“¾
+  ï¿½ï¿½
+ ï¿½ï¿½ï¿½`ï¿½ï¿½ï¿½ï¿½
+  ï¿½ï¿½
+ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+
 */
 
+// .jsxbin bin
+// .jsx    script
 
 
 int main() {
-	std::ifstream file("jsx/ExpressionPaster.jsxbin");
-	std::string line;
+	std::ifstream file("ExpressionPaster.jsx");
+	std::string bin = "";
+	std::string script = "";
 
+	//ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Ì“Ç‚İï¿½ï¿½ï¿½
 	if (!file) {
-		std::cout << "ƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚ß‚Ü‚¹‚ñ‚Å‚µ‚½B" << std::endl;
+		std::cout << "ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½Ç‚İï¿½ï¿½ß‚Ü‚ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ï¿½B" << std::endl;
+		return -1;
 	}
 	else {
-		unsigned int lineCount = 1;
-		//bool isSearching = true;
-		bool hasEnteredOneCharacter = false;
-		std::string kaigyouBuff = "";
+		std::string line;
+		while (std::getline(file, line)) {
+			bin += line;
+		}
 
-		while (true) {
-			//s‚ª‹ó
-			if (!std::getline(file, line))	break;
+		std::cout << "ï¿½Rï¿½ï¿½ï¿½pï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B" << std::endl;
+		//std::cout << bin;
+	}
+	/*
+	else {
+		std::string line;
+		while (std::getline(file, line)) {
+			bin += line;
+		}
 
-			//1s–Ú‚Ìê‡A‘O‚Ì•s—v‚È•”•ª‚ğíœ
-			if (lineCount == 1) {
+		//ï¿½æ“ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½íœ
+		std::string header = "@JSXBIN@ES@2.0@MyB";
 
-				//std::getline(file, line);
+		int header_position = bin.find(header);
+		if (header_position == std::string::npos) {
+			std::cout << "ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½æ“ªï¿½vï¿½fï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ï¿½B" << std::endl;
+		}
+		else {
+			bin.erase(header_position, header.length() + 14);
+		}
 
-				int headerEnd = line.find("MyB");
-				line.erase(0, headerEnd + 18);
-			}
-			//I’[‚ğ’T‚µAíœ
-			int eof = line.find("ByB");
-			if (eof != std::string::npos) {
-				line.erase(eof - 1, 10);
-			}
+		//ï¿½ï¿½[ï¿½vï¿½fï¿½ï¿½ï¿½íœ
+		std::string footer = "ByB";
+		int footer_position = bin.find(footer);
+		if (footer_position == std::string::npos) {
+			std::cout << "ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½ï¿½[ï¿½vï¿½fï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ï¿½B" << std::endl;
+		}
+		else {
+			bin.erase(footer_position - 7, 7 + footer.length());
+		}
 
-			//s‚ª‹ó‚É‚È‚é‚Ü‚Å’²‚×‚é
-			while (!line.empty()) {
-				//c‚è1•¶š‚Å‰üs‚³‚ê‚½
-				if (!kaigyouBuff.empty()) {
-					line = kaigyouBuff + line;
-					kaigyouBuff.erase(0, 1);
-					//std::cout << "c‚è1•¶š‚Å‰üs‚³‚ê‚Ü‚µ‚½" << line << std::endl;
-				}
+		//std::cout << bin;
+		std::cout << "ï¿½tï¿½Rï¿½ï¿½ï¿½pï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B" << std::endl << std::endl << std::endl;
+	}
 
 
-				//•¶š—ñ‚Ìc‚è‚ª1•¶š
-				if (line.size() == 1) {
-					kaigyouBuff = line.substr(0, 1);
-					//std::cout << "‚Ì‚±‚è1•¶š : " << kaigyouBuff << std::endl;
-					line.erase(0, 2);
-				}
-
-				//2•¶šæ“¾
-				std::string replaceBuff = line.substr(0, 2);
-				line.erase(0, 1);
-
-				//ˆê’v‚·‚é•¶š—ñ‚ª‚È‚¢‚©’²‚×‚é
-				for (int j = 0; j < Constants::TYPE; j++) {
-					unsigned int searchedCount = 0;
-					for (int i = 0; i < Constants::CHARACTER_NUM; i++) {
-						if (replaceBuff == character[j][i][0]) {
-
-							replaceBuff = character[j][i][1];
-							std::cout << replaceBuff;
-						}
-						else {
-							searchedCount++;
-						}
-					}
-
-					//if (searchedCount == 26) std::cout << "ˆê’v‚·‚é•¶š—ñ‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½B" << std::endl;
-				}
-			}
-			//std::cout << std::endl;
-
-			lineCount++;
+	for (int j = 0; j < 4; j++) {
+		for (int i = 0; i < CHARACTER_NUM; i++) {
+			std::cout << character[0][i][1] << std::endl;
 		}
 	}
 
-	std::cout << std::endl << std::endl << "----------------" << std::endl << std::endl << std::endl;
 
+	//ï¿½ï¿½ï¿½sï¿½ï¿½uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	std::regex line_break{ R"(.*fJ.*nAjzB)" };	//ï¿½ï¿½ï¿½sï¿½Ìï¿½ï¿½Kï¿½\ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½j
+	std::string buf = bin;
+	bin = std::regex_replace(buf, line_break, "\n");
+	//std::cout << bin;
+
+	//ï¿½ÏŠï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½Ç‚İï¿½ï¿½ñ‚¾ƒoï¿½Cï¿½iï¿½ï¿½ï¿½iï¿½Hï¿½jï¿½ï¿½ï¿½ï¿½É‚È‚ï¿½Ü‚Å’ï¿½ï¿½×‚ï¿½
+	while (!bin.empty()) {
+	}
+	//2ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾
+	/*
+	std::string replaceBuff = bin.substr(0, 2);
+	bin.erase(0, 1);
+
+	//ï¿½ï¿½vï¿½ï¿½ï¿½é•¶ï¿½ï¿½ï¿½ñ‚ª‚È‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×‚ï¿½
+	for (int j = 0; j < CHARACTER_TYPE; j++) {
+		for (int i = 0; i < CHARACTER_NUM; i++) {
+			int replacePos = 0;
+			while (bin.find(character[j][i][0]) != std::string::npos) {
+				replacePos = bin.find(character[j][i][0]);
+				bin.replace(replacePos, 2, character[j][i][1]);
+			}
+
+
+		}
+	}
+	//break;
+
+	std::cout << bin;
+	*/
+
+	uint32_t lineCount = 0;
+	script += std::to_string(lineCount) + " ";
+
+	//Compile
+	while (!bin.empty()) {
+
+		//ï¿½ï¿½ï¿½s
+		if (bin.find("\n")==0) {
+			script += "\n";
+			script += std::to_string(++lineCount) + " ";
+		}
+
+		//script += ++lineCount;
+		for (int j = 0; j < CHARACTER_TYPE; j++) {
+			for (int i = 0; i < CHARACTER_NUM; i++) {
+				if (bin.substr(0, 1) == character[j][i][1]) {
+					script += character[j][i][0];
+				}
+			}
+		}
+
+		bin.erase(0, 1);
+	}
+
+	std::cout << script;
+
+	std::cout << std::endl << std::endl << "----------------" << std::endl << std::endl << std::endl;
 	std::system("pause");
 	return 0;
 }
 
 /*
-int *a=NULL;
-*a = 10;
-*/
 
 
-/*
-			//s‚ğ•ÏŠ·
-			while (!line.empty()) {
+	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½ó‚µƒ]ï¿½[ï¿½ï¿½
 
-				std::string buff;
-				lineBuff = line;
-				std::cout << "c‚è1•¶š‚Å‚·" << std::endl;
+	int *a=NULL;
+	*a = 10;
 
-				//c‚è1•¶š‚Ìê‡
 
-				buff = line.substr(0, 2);
-				line.erase(0, 2);
-				for (int i = 0; i < 26; i++) {
-					if (buff == lower[i][0]) {
-						buff = lower[i][1];
-					}
-				}
-
-				std::cout << buff;
-			}
-
-			std::cout << std::endl;
-
-			if (!std::getline(file, line)) {
-				isSearching = false;
-			}
 */

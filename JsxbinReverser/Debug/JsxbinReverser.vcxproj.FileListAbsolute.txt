@@ -1,2 +1,2 @@
 F:\創作\PF\2024_4\JsxbinReverser\Debug\JsxbinReverser.exe
-C:\Users\magur\OneDrive\ドキュメント\.GitHub\AfterEffects\JsxbinReverser\Debug\JsxbinReverser.exe
+F:\GitHub\AfterEffects\JsxbinReverser\Debug\JsxbinReverser.exe

@@ -2,7 +2,11 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
+<<<<<<< HEAD
       <FullPath>C:\Users\magur\OneDrive\ドキュメント\.GitHub\AfterEffects\JsxbinReverser\Debug\JsxbinReverser.exe</FullPath>
+=======
+      <FullPath>F:\GitHub\AfterEffects\JsxbinReverser\Debug\JsxbinReverser.exe</FullPath>
+>>>>>>> BatchProcessing
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
