@@ -1,5 +1,6 @@
+#include<cstdlib>
 #include<iostream>
-
+#include<sstream>
 #include<Windows.h>
 
 namespace {
@@ -66,15 +67,23 @@ std::string dictionary[TYPE][CHARACTER_NUM][2]{
 	}
 };
 
-BOOL setClipboardText(std::string str);
+BOOL setClipboardText(std::string string);
 
 int main() {
 	std::string script = "";
 	std::string binary = "";
+	std::string unCompileString = "";
+	bool compiled = false;
 
 	while (script != "end") {
+		std::cout << "src : ";
 		std::cin >> script;
 		binary = "";
+		unCompileString = "";
+
+		//文字数表示用先頭文字
+		char front = script.length() + 65;
+		binary += front;
 
 		int length = script.length();
 		for (int k = 0; k < length; k++) {
@@ -83,45 +92,69 @@ int main() {
 
 					if (script.substr(k, 1) == dictionary[j][i][1]) {
 						binary += dictionary[j][i][0];
-						//script.erase(0, 1);
 
+						compiled = true;
 						break;
 					}
 
 				}
 			}
+			//コンパイル不可
+			if (!compiled) {
+				unCompileString += script.substr(k, 2) + ", ";
+			}
+			compiled = false;
 		}
 
+		//クリップボードにコピー
 		setClipboardText(binary);
 
-		std::cout << binary << std::endl << std::endl;
+		std::cout << "bin : " << binary << std::endl;
+		std::cout << "length : " << script.length();
+
+		std::cout << ", uncompiled : ";
+		std::cout << "\x1b[41m" << "";
+		std::cout << unCompileString;
+		std::cout << "\x1b[40m" << "";
+
+		std::cout << std::endl << std::endl;
+
 	}
 
 	return 0;
 }
 
-BOOL setClipboardText(std::string str) {
-	SIZE_T buf_size;
-	std::string* buf;
+BOOL setClipboardText(std::string string) {
+	int buf_size;
+	char* str = const_cast<char*>(string.c_str());
+	char* buf;
 	HANDLE h_mem;
 
-	buf_size = str.length() + 1;
+	buf_size = strlen(str) + 1;
 	h_mem = GlobalAlloc(GMEM_SHARE | GMEM_MOVEABLE, buf_size);
 	if (!h_mem) {
-		std::cout << "失敗" << std::endl;
+		std::cout << "クリップボードへのコピー用メモリの確保に失敗しました" << std::endl;
 		return FALSE;
 	}
 
-	buf = reinterpret_cast<std::string*>(GlobalLock(h_mem));
+	buf = reinterpret_cast<char*>(GlobalLock(h_mem));
+
 	if (buf) {
-		buf = &str;
+
+		strcpy_s(buf, buf_size, str);
+
+		// 2024.04.13 14:19
+		// strcpy_s()関数で例外が発生した原因 : 
+		// strcpy_s()関数の第2引数に、 char* buf  の参照先  HANDLE h_mem  の参照先のバッファサイズではなく、 
+		// char* buf 自身の大きさ(4byte)を渡していたため、バッファーオーバーフローを起こしたから
+
 		GlobalUnlock(h_mem);
 		if (OpenClipboard(NULL)) {
-			//EmptyClipboard();
+			EmptyClipboard();
 			SetClipboardData(CF_TEXT, h_mem);
 			CloseClipboard();
 
-			std::cout << "成功" << std::endl;
+			//std::cout << "成功" << std::endl;
 			return TRUE;
 		}
 	}

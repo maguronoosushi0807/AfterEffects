@@ -68,132 +68,70 @@ std::string character[CHARACTER_TYPE][CHARACTER_NUM][2]{
 	}
 };
 
-/*
-
- �S���擾
-  ��
- ���`����
-  ��
- ��������
-
-*/
-
-// .jsxbin bin
+// .jsxbib binary
 // .jsx    script
 
 
 int main() {
-	std::ifstream file("ExpressionPaster.jsx");
-	std::string bin = "";
+	std::string dir = "jsx/string.jsxbin";
+	//std::cin >> dir;
+	std::ifstream file(dir);
+
+	std::string binary = "";
 	std::string script = "";
 
-	//�t�@�C���̓ǂݍ���
 	if (!file) {
-		std::cout << "�t�@�C����ǂݍ��߂܂���ł����B" << std::endl;
+		std::cout << "Failed to read the file." << std::endl;
 		return -1;
 	}
-	else {
-		std::string line;
-		while (std::getline(file, line)) {
-			bin += line;
-		}
 
-		std::cout << "�R���p�C�����J�n���܂��B" << std::endl;
-		//std::cout << bin;
+	//get all lines from the file
+	std::string line;
+	while (std::getline(file, line)) {
+		binary += line;
 	}
-	/*
-	else {
-		std::string line;
-		while (std::getline(file, line)) {
-			bin += line;
+	std::cout << "Start reverse" << std::endl;
+
+
+	//Reverse
+	//delete front
+	std::string front = "@JSXbinary@ES@2.0@MyB";
+	binary.erase(0, front.length());
+
+
+	std::string director = "";
+	char text_length = 0;
+	bool string_flag = false;
+
+	while (binary!="") {
+		director = binary.substr(0, 2);
+		// "" string
+		if (director == "Fe") {
+			string_flag = true;
+			binary.erase(0, 2);
+			text_length = binary[0];
+			text_length -= 65;
+			binary.erase(0, 1);
+			script += "\"";
 		}
 
-		//�擪�������폜
-		std::string header = "@JSXBIN@ES@2.0@MyB";
+		for (int k = 0; k < text_length; k++) {
+			for (int j = 0; j < CHARACTER_TYPE; j++) {
+				for (int i = 0; i < CHARACTER_NUM; i++) {
+					if (binary.substr(0, 2) == character[j][i][0]) {
+						script += character[j][i][1];
+						script.erase(0, 2);
+					}
 
-		int header_position = bin.find(header);
-		if (header_position == std::string::npos) {
-			std::cout << "�\�����ꂽ�擪�v�f��������܂���ł����B" << std::endl;
-		}
-		else {
-			bin.erase(header_position, header.length() + 14);
-		}
-
-		//��[�v�f���폜
-		std::string footer = "ByB";
-		int footer_position = bin.find(footer);
-		if (footer_position == std::string::npos) {
-			std::cout << "�\�����ꂽ��[�v�f��������܂���ł����B" << std::endl;
-		}
-		else {
-			bin.erase(footer_position - 7, 7 + footer.length());
-		}
-
-		//std::cout << bin;
-		std::cout << "�t�R���p�C�����J�n���܂��B" << std::endl << std::endl << std::endl;
-	}
-
-
-	for (int j = 0; j < 4; j++) {
-		for (int i = 0; i < CHARACTER_NUM; i++) {
-			std::cout << character[0][i][1] << std::endl;
-		}
-	}
-
-
-	//���s��u��������
-	std::regex line_break{ R"(.*fJ.*nAjzB)" };	//���s�̐��K�\���i�������j
-	std::string buf = bin;
-	bin = std::regex_replace(buf, line_break, "\n");
-	//std::cout << bin;
-
-	//�ϊ�����, �ǂݍ��񂾃o�C�i���i�H�j����ɂȂ�܂Œ��ׂ�
-	while (!bin.empty()) {
-	}
-	//2�����擾
-	/*
-	std::string replaceBuff = bin.substr(0, 2);
-	bin.erase(0, 1);
-
-	//��v���镶���񂪂Ȃ������ׂ�
-	for (int j = 0; j < CHARACTER_TYPE; j++) {
-		for (int i = 0; i < CHARACTER_NUM; i++) {
-			int replacePos = 0;
-			while (bin.find(character[j][i][0]) != std::string::npos) {
-				replacePos = bin.find(character[j][i][0]);
-				bin.replace(replacePos, 2, character[j][i][1]);
-			}
-
-
-		}
-	}
-	//break;
-
-	std::cout << bin;
-	*/
-
-	uint32_t lineCount = 0;
-	script += std::to_string(lineCount) + " ";
-
-	//Compile
-	while (!bin.empty()) {
-
-		//���s
-		if (bin.find("\n")==0) {
-			script += "\n";
-			script += std::to_string(++lineCount) + " ";
-		}
-
-		//script += ++lineCount;
-		for (int j = 0; j < CHARACTER_TYPE; j++) {
-			for (int i = 0; i < CHARACTER_NUM; i++) {
-				if (bin.substr(0, 1) == character[j][i][1]) {
-					script += character[j][i][0];
 				}
 			}
 		}
 
-		bin.erase(0, 1);
+		if (string_flag == true) {
+			script += "\"";
+			string_flag = false;
+		}
+
 	}
 
 	std::cout << script;
@@ -202,14 +140,3 @@ int main() {
 	std::system("pause");
 	return 0;
 }
-
-/*
-
-
-	�������Ԃ��󂵃]�[��
-
-	int *a=NULL;
-	*a = 10;
-
-
-*/
