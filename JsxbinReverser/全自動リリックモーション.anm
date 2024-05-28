@@ -1,0 +1,48 @@
+--track0:最大値,0,1000,100
+--track1:ランダム,0,100,0
+--track2:進行速度,0,100,4
+--track3:ズレ,0,100,8
+--dialog:X/chk, local move_x=1;Y/chk, local move_y=1;双方向/chk, local dual=1;反転/chk, local invert=0;退場, local out=0;瞬間サイズ,local size=200;モード,local mode=1;パラメータ値,local param=1023;シード/col, local seed=0;
+
+local modname="curve_editor"
+if not package.loaded[modname] then
+	package.preload[modname]=package.loadlib(modname .. ".auf","luaopen_" .. modname)
+	require(modname)
+	package.preload[modname]=nil
+end
+
+local progress=0
+local move=0
+if out==0 then --入場
+    progress = (obj.track2*obj.frame-(obj.index*obj.track3))
+    if progress < 0 then
+        obj.alpha=0
+    elseif progress < obj.track2 then
+        obj.zoom=size/100
+    end
+    progress = math.min(math.max(progress,0),100)/100
+    move = (1-curve_editor.getcurve(mode,param,progress,0,1))*obj.track0*obj.rand(100-obj.track1,100,obj.index,seed)/100
+else --退場
+    local start_frame = obj.totalframe-(100/obj.track2)-(obj.track3/obj.track2)*(obj.num-1)
+    progress = (obj.frame-start_frame)*obj.track2-(obj.index*obj.track3)
+    if progress>100 then
+        obj.alpha=0
+    end
+    progress = math.min(math.max(progress,0),100)/100
+    move = (curve_editor.getcurve(mode,param,progress,0,1))*obj.track0*obj.rand(100-obj.track1,100,obj.index,seed)/100
+end
+
+move = move*(1-2*obj.rand(0,dual,obj.index,seed+1))
+move = move*(1-invert*2)
+
+if move_x+move_y == 2 then
+    if obj.rand(0,1,obj.index,seed+2) == 0 then
+        obj.ox = obj.ox+move
+    else
+        obj.oy = obj.oy+move
+    end
+elseif move_x == 1 then
+    obj.ox = obj.ox+move
+elseif move_y == 1 then
+    obj.oy = obj.oy+move
+end
