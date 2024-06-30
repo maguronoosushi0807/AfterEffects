@@ -1,0 +1,1 @@
+<h1 class="text-red-400">Welcome to Bolt CEP!</h1>
