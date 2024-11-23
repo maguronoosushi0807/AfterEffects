@@ -1,0 +1,4 @@
+RealTimeDatamosh = require("RealTimeDatamosh")
+d,w,h = obj.getpixeldata()
+RealTimeDatamosh.mosh(data,w,h)
+obj.putpixeldata(data)

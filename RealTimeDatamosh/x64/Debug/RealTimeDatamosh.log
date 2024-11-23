@@ -1,0 +1,7 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(517,5): warning MSB8004: Output ディレクトリの末尾がスラッシュではありません。Output ディレクトリが適切に評価されるようにするために、このビルド インスタンスによってスラッシュが追加されます。
+     ライブラリ ..\..\..\..\..\..\..\AviUtl 1.10\script\律\RealTimeDatamosh.lib とオブジェクト ..\..\..\..\..\..\..\AviUtl 1.10\script\律\RealTimeDatamosh.exp を作成中
+RealTimeDatamosh.obj : error LNK2019: 未解決の外部シンボル lua_tointeger が関数 "int __cdecl mosh(struct lua_State *)" (?mosh@@YAHPEAUlua_State@@@Z) で参照されました
+RealTimeDatamosh.obj : error LNK2019: 未解決の外部シンボル lua_touserdata が関数 "int __cdecl mosh(struct lua_State *)" (?mosh@@YAHPEAUlua_State@@@Z) で参照されました
+RealTimeDatamosh.obj : error LNK2019: 未解決の外部シンボル luaL_register が関数 luaopen_RealTimeDatamosh で参照されました
+C:\lua51\lua51.lib : warning LNK4272: ライブラリのコンピューターの種類 'x86' がターゲットのコンピューターの種類' x64' と競合しています
+..\..\..\..\..\..\..\AviUtl 1.10\script\律\RealTimeDatamosh.dll : fatal error LNK1120: 3 件の未解決の外部参照
